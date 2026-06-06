@@ -1,0 +1,22 @@
+# Orphy — dependency manifest.
+#
+# Pins are per-phase so each subagent installs only what its phase needs.
+# Installed into the project venv at ./.venv on system Python 3.14.5.
+#   python3 -m venv .venv
+#   .venv/bin/python -m pip install -r requirements.txt
+#
+# NOTE: Phase 2 (analysis) deps — librosa / numba / pretty_midi — are
+# DELIBERATELY NOT listed here. They are Phase 2's concern, may lack
+# Python 3.14 wheels, and must not be pulled in by capture.
+
+# --------------------------------------------------------------------------- #
+# Phase 1 — Capture (this phase)
+# --------------------------------------------------------------------------- #
+numpy==2.4.6          # resample math, RMS/clip checks, buffer handling
+soundfile==0.14.0     # libsndfile bindings: read any format, write 16k mono PCM WAV
+sounddevice==0.5.5    # OPTIONAL live-mic capture path (demo uses fixtures, not mic)
+
+# Transitive deps of the above (pinned for reproducibility):
+cffi==2.0.0           # required by soundfile
+pycparser==3.0        # required by cffi
+typing_extensions==4.15.0  # required by soundfile

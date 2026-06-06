@@ -48,3 +48,9 @@ standard-aifc==3.13.0    # restores stdlib aifc removed in 3.13+ (mido dep chain
 standard-chunk==3.13.0   # restores stdlib chunk removed in 3.13+
 standard-sunau==3.13.0   # restores stdlib sunau removed in 3.13+
 audioop-lts==0.2.2       # restores stdlib audioop removed in 3.13+
+
+# --------------------------------------------------------------------------- #
+# Phase 3 — Feedback generation & delivery
+# --------------------------------------------------------------------------- #
+google-genai>=1.0.0   # Gemini model client for feedback generation + Gemini Live delivery
+python-dotenv>=1.0.0  # load model/API config from .env

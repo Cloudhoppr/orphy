@@ -1,0 +1,10 @@
+{
+  "summary": "Overall, this take showed good note recognition but struggled with pitch accuracy and timing.",
+  "narration": "You hit all 8 notes, which is a great start. However, your pitch was off by an average of 65 cents, and your timing had an average offset of 151 milliseconds. Specifically, notes 0, 4, and 1 were quite flat, with note 0 being 100 cents flat.",
+  "fixes": [
+    "Focus on sustaining your pitch more accurately, especially on the longer notes.",
+    "Practice with a metronome to tighten up your rhythm and hit the beats precisely.",
+    "Pay close attention to the beginning of each note to ensure you're landing directly on the target pitch."
+  ],
+  "metrics_ref": "/Users/Atiksh1/orphy/cache/bad_metrics.json"
+}

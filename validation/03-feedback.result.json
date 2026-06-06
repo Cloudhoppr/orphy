@@ -1,0 +1,17 @@
+{
+  "phase": "feedback",
+  "validator": "feedback_validator.py",
+  "takes": {
+    "bad": {
+      "take": "bad",
+      "passed": true,
+      "errors": []
+    },
+    "good": {
+      "take": "good",
+      "passed": true,
+      "errors": []
+    }
+  },
+  "passed": true
+}

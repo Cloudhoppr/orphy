@@ -1,0 +1,19 @@
+{
+  "take": "bad",
+  "notes": [
+    {"ref_index": 0, "ref_pitch_midi": 60, "sung_hz": 255.0, "cents_error": -100.0, "onset_offset_ms": -200.0, "voiced": true},
+    {"ref_index": 1, "ref_pitch_midi": 62, "sung_hz": 278.0, "cents_error": -70.0, "onset_offset_ms": 180.0, "voiced": true},
+    {"ref_index": 2, "ref_pitch_midi": 64, "sung_hz": 312.0, "cents_error": -55.0, "onset_offset_ms": -150.0, "voiced": true},
+    {"ref_index": 3, "ref_pitch_midi": 65, "sung_hz": null, "cents_error": null, "onset_offset_ms": null, "voiced": false},
+    {"ref_index": 4, "ref_pitch_midi": 67, "sung_hz": 375.0, "cents_error": -90.0, "onset_offset_ms": 220.0, "voiced": true},
+    {"ref_index": 5, "ref_pitch_midi": 65, "sung_hz": 348.0, "cents_error": -45.0, "onset_offset_ms": -100.0, "voiced": true},
+    {"ref_index": 6, "ref_pitch_midi": 64, "sung_hz": 316.0, "cents_error": -40.0, "onset_offset_ms": 130.0, "voiced": true},
+    {"ref_index": 7, "ref_pitch_midi": 62, "sung_hz": 284.0, "cents_error": -55.0, "onset_offset_ms": -80.0, "voiced": true}
+  ],
+  "summary": {
+    "mean_abs_cents": 65.0,
+    "mean_abs_onset_ms": 151.0,
+    "notes_matched": 8,
+    "notes_total": 8
+  }
+}

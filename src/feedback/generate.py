@@ -11,7 +11,7 @@ from typing import Optional
 from dotenv import load_dotenv
 
 from src.contracts import FeedbackResult, Metrics
-from src.config import CACHE_DIR
+from src.config import CACHE_DIR, PROJECT_ROOT
 
 load_dotenv()
 
@@ -116,7 +116,9 @@ def generate_feedback(
     from google.genai import types as genai_types
 
     take = metrics["take"]
-    metrics_ref = str(_metrics_path(take))
+    # Store a project-relative path so the fixture is portable across machines
+    # (the validator resolves it from the project root, per the PRD schema).
+    metrics_ref = str(_metrics_path(take).relative_to(PROJECT_ROOT))
 
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:

@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Play } from 'lucide-react'
 
-// Deterministic particle positions
 const PARTICLES = Array.from({ length: 28 }, (_, i) => ({
   id: i,
   x: (i * 37 + 11) % 100,
@@ -21,11 +20,21 @@ export default function HeroSection() {
   const nav = useNavigate()
 
   return (
-    <section className="relative flex flex-col items-center justify-center overflow-hidden"
-      style={{ minHeight: '100vh', paddingTop: 64 }}>
-
-      {/* Background radial glows */}
-      <div className="absolute inset-0 pointer-events-none">
+    <section
+      style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '100vh',
+        paddingTop: 64,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Background glows */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         <div style={{
           position: 'absolute', top: '20%', left: '15%',
           width: 600, height: 600, borderRadius: '50%',
@@ -41,55 +50,47 @@ export default function HeroSection() {
       </div>
 
       {/* Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         {PARTICLES.map(p => (
-          <div
-            key={p.id}
-            style={{
-              position: 'absolute',
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: p.size,
-              height: p.size,
-              borderRadius: '50%',
-              background: 'rgba(255, 59, 92, 0.5)',
-              animation: `float-up ${p.duration}s ${p.delay}s ease-in-out infinite`,
-            }}
-          />
+          <div key={p.id} style={{
+            position: 'absolute', left: `${p.x}%`, top: `${p.y}%`,
+            width: p.size, height: p.size, borderRadius: '50%',
+            background: 'rgba(255, 59, 92, 0.5)',
+            animation: `float-up ${p.duration}s ${p.delay}s ease-in-out infinite`,
+          }} />
         ))}
       </div>
 
-      {/* Floating glassmorphic orb */}
-      <div className="absolute pointer-events-none" style={{
-        top: '50%', left: '50%',
+      {/* Floating orb decoration */}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
         transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
         animation: 'hero-orb-float 6s ease-in-out infinite',
       }}>
         <div style={{
-          width: 380,
-          height: 380,
-          borderRadius: '50%',
+          width: 380, height: 380, borderRadius: '50%',
           background: 'radial-gradient(circle at 35% 30%, rgba(255,59,92,0.08) 0%, rgba(255,255,255,0.02) 50%, transparent 100%)',
-          backdropFilter: 'blur(1px)',
           border: '1px solid rgba(255,255,255,0.04)',
           boxShadow: '0 0 120px rgba(255,59,92,0.08)',
         }} />
       </div>
 
-      {/* Hero content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6" style={{ maxWidth: 820 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
-            style={{
-              background: 'rgba(255,59,92,0.08)',
-              border: '1px solid rgba(255,59,92,0.2)',
-            }}>
+      {/* Content */}
+      <div style={{
+        position: 'relative', zIndex: 1,
+        maxWidth: 820, width: '100%',
+        margin: '0 auto', padding: '0 32px',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+      }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '8px 16px', borderRadius: 99, marginBottom: 32,
+            background: 'rgba(255,59,92,0.08)', border: '1px solid rgba(255,59,92,0.2)',
+          }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#FF3B5C', animation: 'pulse-glow 2s ease infinite' }} />
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#FF3B5C' }}>
+            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FF3B5C' }}>
               AI Vocal Coach
             </span>
           </div>
@@ -99,8 +100,11 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="font-bold tracking-tight leading-none mb-6"
-          style={{ fontSize: 'clamp(52px, 8vw, 88px)', letterSpacing: '-0.04em' }}
+          style={{
+            fontSize: 'clamp(52px, 8vw, 88px)',
+            fontWeight: 700, letterSpacing: '-0.04em',
+            lineHeight: 1.0, marginBottom: 24,
+          }}
         >
           Sing.{' '}
           <span style={{ color: '#FF3B5C' }}>Hear.</span>
@@ -111,8 +115,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
-          className="text-lg leading-relaxed mb-10"
-          style={{ color: '#A1A1AA', maxWidth: 560, fontSize: 18 }}
+          style={{ fontSize: 18, color: '#A1A1AA', lineHeight: 1.65, marginBottom: 40, maxWidth: 520 }}
         >
           Your AI vocal coach listens in real time, analyzes pitch, timing, tone,
           and confidence, then gives actionable coaching in seconds.
@@ -122,7 +125,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex items-center gap-4 flex-wrap justify-center"
+          style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}
         >
           <button className="btn-primary" onClick={() => nav('/dashboard')}>
             Start Singing
@@ -138,21 +141,15 @@ export default function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.7 }}
-          className="flex items-center gap-0.5 mt-16"
-          style={{ height: 64 }}
+          style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: 64, height: 64 }}
         >
           {WAVEFORM_BARS.map((bar, i) => (
-            <div
-              key={i}
-              style={{
-                width: 4,
-                height: bar.height,
-                borderRadius: 2,
-                background: `rgba(255, 59, 92, ${0.25 + (bar.height / 64) * 0.55})`,
-                animation: `wave-bar ${0.8 + (i % 5) * 0.15}s ${bar.delay}s ease-in-out infinite`,
-                transformOrigin: 'center',
-              }}
-            />
+            <div key={i} style={{
+              width: 4, height: bar.height, borderRadius: 2,
+              background: `rgba(255, 59, 92, ${0.25 + (bar.height / 64) * 0.55})`,
+              animation: `wave-bar ${0.8 + (i % 5) * 0.15}s ${bar.delay}s ease-in-out infinite`,
+              transformOrigin: 'center',
+            }} />
           ))}
         </motion.div>
       </div>

@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { Mic, Brain, TrendingUp } from 'lucide-react'
 
+const WRAP = { maxWidth: 1040, width: '100%', marginLeft: 'auto', marginRight: 'auto', padding: '0 32px' }
+
 const STEPS = [
   {
     icon: Mic,
@@ -27,33 +29,35 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how" className="relative w-full py-32 px-6"
-      style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-
-      <div className="max-w-5xl w-full mx-auto">
+    <section
+      id="how"
+      style={{
+        position: 'relative',
+        width: '100%',
+        padding: '112px 0',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+      }}
+    >
+      <div style={WRAP}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          style={{ textAlign: 'center', marginBottom: 72 }}
         >
-          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#FF3B5C' }}>
+          <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#FF3B5C', marginBottom: 14 }}>
             The Process
           </p>
-          <h2 className="text-5xl font-bold tracking-tight mb-4" style={{ letterSpacing: '-0.03em' }}>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 12 }}>
             How Orphy works
           </h2>
-          <p className="text-lg" style={{ color: '#A1A1AA' }}>
+          <p style={{ fontSize: 17, color: '#A1A1AA' }}>
             Three steps from raw voice to real improvement.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-          {/* Connector line (desktop) */}
-          <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-px"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(255,59,92,0.3), transparent)', top: '3.5rem' }} />
-
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
           {STEPS.map((step, i) => {
             const Icon = step.icon
             return (
@@ -64,23 +68,26 @@ export default function HowItWorks() {
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.6, delay: i * 0.15 }}
                 whileHover={{ scale: 1.02, y: -4 }}
-                className="gradient-border p-8 flex flex-col gap-5 cursor-default"
-                style={{ transition: 'transform 0.25s ease, box-shadow 0.25s ease' }}
+                className="gradient-border"
+                style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 20, cursor: 'default', transition: 'transform 0.25s ease' }}
               >
-                <div className="flex items-start justify-between">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                    style={{ background: `${step.color}14`, border: `1px solid ${step.color}30` }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                  <div style={{
+                    width: 52, height: 52, borderRadius: 16,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${step.color}14`, border: `1px solid ${step.color}30`,
+                  }}>
                     <Icon size={24} color={step.color} />
                   </div>
-                  <span className="text-5xl font-bold" style={{ color: 'rgba(255,255,255,0.05)', letterSpacing: '-0.04em' }}>
+                  <span style={{ fontSize: 48, fontWeight: 700, color: 'rgba(255,255,255,0.05)', letterSpacing: '-0.04em' }}>
                     {step.number}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2" style={{ letterSpacing: '-0.02em' }}>
+                  <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 8 }}>
                     {step.title}
                   </h3>
-                  <p className="leading-relaxed" style={{ color: '#A1A1AA', fontSize: 15 }}>
+                  <p style={{ fontSize: 15, color: '#A1A1AA', lineHeight: 1.65 }}>
                     {step.description}
                   </p>
                 </div>

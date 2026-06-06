@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion'
 
-function Counter({ target, suffix = '', prefix = '' }) {
+const WRAP = { maxWidth: 1040, width: '100%', marginLeft: 'auto', marginRight: 'auto', padding: '0 32px', position: 'relative', zIndex: 1 }
+
+function Counter({ target, suffix = '' }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const v = useMotionValue(0)
@@ -13,7 +15,6 @@ function Counter({ target, suffix = '', prefix = '' }) {
 
   return (
     <span ref={ref}>
-      {prefix}
       <motion.span>{display}</motion.span>
       {suffix}
     </span>
@@ -21,38 +22,45 @@ function Counter({ target, suffix = '', prefix = '' }) {
 }
 
 const STATS = [
-  { target: 10000, suffix: '+', label: 'Practice Sessions',                   sub: 'and counting' },
-  { target: 92,    suffix: '%', label: 'Average Pitch Accuracy Improvement',  sub: 'across all users' },
-  { target: 4.9,   suffix: '/5', label: 'User Rating',                        sub: 'from vocal students', isDecimal: true },
-  { target: 3,     suffix: 's',  label: 'Average Feedback Time',              sub: 'from stop to coaching' },
+  { target: 10000, suffix: '+', label: 'Practice Sessions',                  sub: 'and counting' },
+  { target: 92,    suffix: '%', label: 'Pitch Accuracy Improvement',         sub: 'across all users' },
+  { target: 4,     suffix: '.9/5', label: 'User Rating',                     sub: 'from vocal students' },
+  { target: 3,     suffix: 's',  label: 'Average Feedback Time',             sub: 'from stop to coaching' },
 ]
 
 export default function Stats() {
   return (
-    <section className="relative w-full py-28 px-6"
+    <section
       style={{
+        position: 'relative',
+        width: '100%',
+        padding: '96px 0',
         background: 'rgba(255,255,255,0.015)',
         borderTop: '1px solid rgba(255,255,255,0.05)',
         borderBottom: '1px solid rgba(255,255,255,0.05)',
-      }}>
+        overflow: 'hidden',
+      }}
+    >
+      {/* Ambient glow — contained inside the section */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(ellipse at 50% 100%, rgba(255,59,92,0.05) 0%, transparent 60%)',
+      }} />
 
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(255,59,92,0.04) 0%, transparent 60%)' }} />
-
-      <div className="relative max-w-5xl w-full mx-auto">
+      <div style={WRAP}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          style={{ textAlign: 'center', marginBottom: 56 }}
         >
-          <h2 className="text-5xl font-bold tracking-tight" style={{ letterSpacing: '-0.03em' }}>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 700, letterSpacing: '-0.03em' }}>
             The numbers speak.
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
           {STATS.map((s, i) => (
             <motion.div
               key={s.label}
@@ -60,16 +68,14 @@ export default function Stats() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="glass-card p-7 flex flex-col gap-2"
+              className="glass-card"
+              style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}
             >
-              <div className="text-4xl font-bold" style={{ letterSpacing: '-0.04em', color: '#fff' }}>
-                {s.isDecimal
-                  ? '4.9/5'
-                  : <Counter target={s.target} suffix={s.suffix} />
-                }
+              <div style={{ fontSize: 38, fontWeight: 700, letterSpacing: '-0.04em', color: '#fff' }}>
+                <Counter target={s.target} suffix={s.suffix} />
               </div>
-              <p className="text-sm font-medium leading-snug">{s.label}</p>
-              <p className="text-xs" style={{ color: '#A1A1AA' }}>{s.sub}</p>
+              <p style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.4 }}>{s.label}</p>
+              <p style={{ fontSize: 12, color: '#A1A1AA' }}>{s.sub}</p>
             </motion.div>
           ))}
         </div>

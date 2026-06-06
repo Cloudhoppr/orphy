@@ -5,9 +5,9 @@
 #   python3 -m venv .venv
 #   .venv/bin/python -m pip install -r requirements.txt
 #
-# NOTE: Phase 2 (analysis) deps — librosa / numba / pretty_midi — are
-# DELIBERATELY NOT listed here. They are Phase 2's concern, may lack
-# Python 3.14 wheels, and must not be pulled in by capture.
+# Phase 2 (analysis) deps — librosa / numba / pretty_midi and their closure —
+# are listed in their own section below. They were verified to resolve and
+# import on Python 3.14.5 (cp314 wheels for numba/llvmlite/scipy/sklearn).
 
 # --------------------------------------------------------------------------- #
 # Phase 1 — Capture (this phase)
@@ -20,3 +20,31 @@ sounddevice==0.5.5    # OPTIONAL live-mic capture path (demo uses fixtures, not 
 cffi==2.0.0           # required by soundfile
 pycparser==3.0        # required by cffi
 typing_extensions==4.15.0  # required by soundfile
+
+# --------------------------------------------------------------------------- #
+# Phase 2 — Analysis (this phase)
+# --------------------------------------------------------------------------- #
+# All resolve to working wheels on Python 3.14.5 (verified by install +
+# import). numba/llvmlite ship cp314 wheels; soxr uses an abi3 wheel.
+librosa==0.11.0       # pyin pitch tracking, onset detection, sequence.dtw alignment
+pretty_midi==0.2.11   # load + isolate the seeded monophonic reference MIDI melody
+
+# Transitive deps of the above (pinned for reproducibility):
+numba==0.65.1         # librosa JIT acceleration
+llvmlite==0.47.0      # numba LLVM backend (cp314 wheel)
+scipy==1.17.1         # librosa DSP primitives
+scikit-learn==1.9.0   # librosa pulls sklearn utilities
+audioread==3.1.0      # librosa audio backend fallback
+soxr==1.1.0           # librosa high-quality resampling
+lazy-loader==0.5      # librosa lazy submodule loading
+pooch==1.9.0          # librosa example-data fetcher (unused at runtime)
+joblib==1.5.3         # sklearn/librosa parallelism
+threadpoolctl==3.6.0  # sklearn thread control
+decorator==5.3.1      # librosa utility decorators
+msgpack==1.1.2        # librosa cache serialization
+mido==1.3.3           # pretty_midi MIDI I/O backend
+six==1.17.0           # pretty_midi / mido compat shim
+standard-aifc==3.13.0    # restores stdlib aifc removed in 3.13+ (mido dep chain)
+standard-chunk==3.13.0   # restores stdlib chunk removed in 3.13+
+standard-sunau==3.13.0   # restores stdlib sunau removed in 3.13+
+audioop-lts==0.2.2       # restores stdlib audioop removed in 3.13+

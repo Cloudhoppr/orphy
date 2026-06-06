@@ -2,8 +2,8 @@
 
 - **Phase:** 2 — Analysis, with reference seeding (PRD §3.1, §3.2, §6)
 - **Owning subagent:** analysis-agent
-- **Status:** `blocked`
-- **Validation result reference:** `validation/02-analysis.result.json` — **not yet produced.** The analysis validator (invariants + golden regression, PRD §7) cannot run because the two metrics files do not exist, and they cannot be produced because BOTH the reference MIDI and the two take WAVs are absent (see Open questions). No validator pass can exist until those assets arrive.
+- **Status:** `blocked` (updated by orchestrator — assets arrived; metrics produced but untrustworthy: reference-vs-recording mismatch)
+- **Validation result reference:** `validation/02-analysis.result.json` — **not yet produced.** All assets now exist and the pipeline runs end-to-end, but the resulting metrics are untrustworthy (see Open question). The validator was deliberately NOT run on garbage; the broken `cache/*_metrics.json` were removed. No validator pass can exist until the reference and recordings correspond.
 
 ## Summary
 
@@ -104,22 +104,27 @@ All in a temp dir, deleted afterward; nothing named `bad`/`good` written to `cac
 - `validation/02-analysis.result.json` does not exist yet — blocked on the assets below.
 - **Stray asset note:** `reference/new-york-vocals-2.mid` exists but is NOT at the agreed path `reference/song_melody.mid`. It was left untouched (out of scope to rename/move/validate). If it is the intended reference, a human should place/verify it at `reference/song_melody.mid`; `load_reference` will then enforce the monophonic + octave gates on it.
 
-## Open questions (BLOCKERS — require human input, PRD §3.2, §5.4)
+## Open question (BLOCKER — requires human input, PRD §3.2, §5.4)
 
-Two distinct assets are missing; both are required before any metrics or the validator can run:
+**Status update (orchestrator):** All three human assets were provided — `reference/song_melody.mid` (the renamed `new-york-vocals-2.mid`; passes `load_reference`'s monophonic + single-track + middle-C octave gates: 26 notes, A3–A4, 220–440 Hz) and both source recordings (`assets/source/{bad,good}_take_source.wav`). Phase 1 capture and Phase 2 analysis both ran end-to-end and produced metrics. **But the metrics are untrustworthy and were removed**, because the recordings do not correspond to the reference melody.
 
-1. **`reference/song_melody.mid` (the seeded reference) does not exist.** It must be a monophonic, vocals-only melody MIDI (PRD §3.2). On arrival it must pass `load_reference`'s monophonic + single-pitched-track + middle-C octave checks before its pitches are trusted. Do not fabricate or download it — it is human-provided. (A non-canonical `reference/new-york-vocals-2.mid` is present; if that is the melody, place it at `reference/song_melody.mid`.)
+**Empirical finding (diagnosed by orchestrator):**
+- Pitch/key offset: the good take's median sung pitch is ~1 octave below the reference (median −1181 cents); the bad take ~1.5 octaves below (~−1721 cents). The reference key does not match the singer's.
+- Alignment/correspondence failure: even after octave-folding (octave-invariant comparison), the good take matches only **18% of notes within 50 cents** (27% within 200 cents), mean abs ~287 cents, with onset offsets up to **2.4 s**. The sung notes are not the reference notes — this is a genuine reference-vs-recording mismatch, not a DTW tuning issue, so no DSP change in `analysis.py` can rescue it.
 
-2. **`cache/bad_take.wav` and `cache/good_take.wav` do not exist.** They are produced by Phase 1 (capture) once its source recordings are provided — see `handoffs/01-capture.handoff.md`, which is itself blocked on the human-provided source recordings.
+**Decision taken (human):** "The takes/reference may not match." The fix is at the asset level, not the code. Provide EITHER:
+- recordings that sing **this exact** `reference/song_melody.mid` melody straight (good = in tune, bad = audibly off-pitch, a cappella/headphone-monitored, 3–300 s), dropped at `assets/source/{bad,good}_take_source.wav`; **or**
+- a reference MIDI (monophonic, vocals-only) that matches **what was actually recorded**, placed at `reference/song_melody.mid`.
 
-**Exact commands to finish Phase 2 once BOTH assets exist:**
+**Exact commands to finish Phase 2 once corresponding assets are in place** (orchestrator will run these, then inspect bad-take alignment per §6, then spawn the validator subagent to author/run `validators/analysis_validator.py` → `validation/02-analysis.result.json`):
 ```bash
-# (Phase 1 first, per 01-capture.handoff.md, to produce the take WAVs:)
+# Re-ingest only if new source recordings were provided:
 .venv/bin/python -m src.capture --take bad  --input assets/source/bad_take_source.wav
 .venv/bin/python -m src.capture --take good --input assets/source/good_take_source.wav
 
-# Then Phase 2 — produces cache/bad_metrics.json and cache/good_metrics.json:
+# Re-run analysis (regenerates cache/{bad,good}_metrics.json):
 .venv/bin/python -m src.analysis --take bad
 .venv/bin/python -m src.analysis --take good
 ```
-After that, manually inspect the bad-take alignment (PRD §6) and have the validator subagent author/run `validators/analysis_validator.py` to produce `validation/02-analysis.result.json`.
+
+**Note on code state:** `src/reference.py` and `src/analysis.py` are built, dependency-verified on Python 3.14, and run cleanly — they are NOT the blocker. The capture outputs (`cache/{bad,good}_take.wav`) are valid 16 kHz mono and remain in place.
